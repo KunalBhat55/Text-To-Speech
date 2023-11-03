@@ -6,8 +6,8 @@ async function ConvertToSpeech({ text }) {
   const client = new PollyClient({
     region: "us-east-1",
     credentials: {
-      accessKeyId: "AKIAUQTJCEWAJM2MZHXK",
-      secretAccessKey: "77gQ4nSOPan7QyDVZc0H+3x9Wjq4Mo1+b1g028qn",
+      accessKeyId: "YOUR_ACCESS_KEY",
+      secretAccessKey: "YOUR_SECRET_ACCESS_KEY",
     },
     
   });
