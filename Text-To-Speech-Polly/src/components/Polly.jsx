@@ -1,34 +1,24 @@
-import { useEffect, useState } from "react";
+// polly.jsx (frontend)
 
+import { useState } from "react";
 import axios from "axios";
 
-
-
 function Polly() {
-
   const [text, setText] = useState("");
-  //   const [voice, setVoice] = useState("Joanna");
+  const [audioUrl, setAudioUrl] = useState(null);
 
-  const [audio, setAudio] = useState("http://localhost:3000/api/getAudio");
-
-
-  const sendText = () => { 
-
-    axios.post("/api/ConvertToSpeech", {text: text})
-    .then((res) => {
-      console.log(res.data);
-      setAudio(res.data);
-    })
-
-    .catch((err) => {
-      console.log(err);
-    });
-    
-   };
-
-
-
-// *****************************************************
+  const sendText = () => {
+    axios
+      .post("/api/ConvertToSpeech", { text }, { responseType: "blob" }) // Important to set responseType to 'blob'
+      .then((res) => {
+        const url = URL.createObjectURL(res.data);
+        setAudioUrl(url);
+        console.log(url);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   return (
     <div>
@@ -46,21 +36,27 @@ function Polly() {
           />
         </div>
         <div className="flex justify-center mt-4">
-          <button className="btn btn-primary mx-2 " onClick={sendText}>
+          <button className="btn btn-primary mx-2" onClick={sendText}>
             Convert
           </button>
         </div>
       </div>
-      <div className="flex justify-center mt-4">
-        {/* <audio controls>
-          <source src={audio} type="audio/mpeg" />
-        </audio> */}
-        <a href={audio} className="link">Get your audio Here!</a>
-      </div>
-      <p className="italic text-center mt-2 text-gray-500">Please Reload the page after convert to get your Audio!</p>convert zala var link
+      {audioUrl && (
+        <div className="flex justify-center mt-4">
+          <audio controls src={audioUrl}>
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      )}
+      {audioUrl && (
+        <div className="flex justify-center mt-4">
+          <a href={audioUrl} download="speech.mp3" className="link">
+            Download Audio
+          </a>
+        </div>
+      )}
     </div>
   );
 }
 
 export default Polly;
-
